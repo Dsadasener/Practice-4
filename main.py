@@ -1,10 +1,3 @@
-# 1. Відкрити file_in для читання, а file_out для запису.
-    # 2. Знайти потрібні цифри (використовуючи split() та isnumeric(), як у прикладі).
-    # 3. Записати їх у file_out.
-    # 4. Закрити файли.
-    # 5. Відкрити file_out для читання і вивести результат на екран (print).
-    # Використовуй функцію safe_open() для всіх операцій з файлами!
-
 def safe_open(file_name, mode):
     try:
         file = open(file_name, mode, encoding='utf-8')
@@ -13,6 +6,7 @@ def safe_open(file_name, mode):
     except Exception as e:
         print(f"Помилка: Файл {file_name} не вдалося відкрити.({e})")
         return None
+
 
 def part_a_create_file(filename):
     """
@@ -32,6 +26,7 @@ def part_a_create_file(filename):
         file.close()
         print(f"Дані записано у файл {filename}\n")
 
+
 def participant_task_process_and_print(file_in, file_out):
     """
     Завдання для Напарника
@@ -39,7 +34,41 @@ def participant_task_process_and_print(file_in, file_out):
        і записує їх у TF2_2 в один рядок через пробіл (Частина Б).
     2. Читає вміст TF2_2 і виводить його на екран (Частина В).
     """
-    print("Повернемося через 5хв, повернітся пізніше")
+    # ДОДАНО: 1. Відкриваємо file_in для читання
+    f_in = safe_open(file_in, 'r')
+    if not f_in:
+        return
+
+    # ДОДАНО: Читаємо весь текст з файлу
+    text = f_in.read()
+    f_in.close()  # ДОДАНО: 4. Закриваємо файл після читання
+
+    # ДОДАНО: 2. Знаходимо потрібні цифри (використовуючи split() та isnumeric())
+    words = text.split()  # Розбиваємо текст на окремі слова по пробілах
+    target_numbers = []
+    for word in words:
+        # Перевіряємо, чи складається слово тільки з цифр і чи його довжина більша за 2
+        if word.isnumeric() and len(word) > 2:
+            target_numbers.append(word)
+
+    # ДОДАНО: Відкриваємо file_out для запису
+    f_out = safe_open(file_out, 'w')
+    if not f_out:
+        return
+
+    # ДОДАНО: 3. Записуємо знайдені числа у file_out в один рядок через пробіл
+    f_out.write(" ".join(target_numbers))
+    f_out.close()  # ДОДАНО: 4. Закриваємо файл після запису
+
+    # ДОДАНО: 5. Відкриваємо file_out для читання і виводимо результат на екран
+    f_out_read = safe_open(file_out, 'r')
+    if f_out_read:
+        result = f_out_read.read()
+        print(f"\n--- Вміст файлу {file_out} ---")
+        print(result)
+        print("---------------------------------\n")
+        f_out_read.close()  # ДОДАНО: Закриваємо файл після виведення
+
 
 def main():
     file1_name = "TF2_1.txt"
